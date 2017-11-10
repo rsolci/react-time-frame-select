@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import TimeUnit from './TimeUnit'
+
 const dayHeight = 20;
 
 class Day extends Component {
@@ -9,30 +11,29 @@ class Day extends Component {
     end: 0
   }
 
-  mouseClick = (event) => {
+  mouseClick = (start) => {
+    const position = start * dayHeight;
     if (this.state.selecting) {
       this.setState({
         selecting: !this.state.selecting,
         start: 0,
-        end: event.clientY
+        end: position
       });
       // TODO event create mode
     } else {
-      const snapped = Math.floor(event.clientY / dayHeight) * dayHeight;
-      console.info(snapped);
       this.setState({
         selecting: !this.state.selecting,
-        start: snapped,
-        end: snapped
+        start: position,
+        end: position
       })
     }
   }
 
-  mouseMove = (event) => {
+  mouseMove = (start) => {
+    const position = start * dayHeight;
     if (this.state.selecting) {
-      const snapped = Math.ceil(event.clientY / dayHeight) * dayHeight;
       this.setState({
-        end: snapped
+        end: position
       })
     }
   }
@@ -40,7 +41,7 @@ class Day extends Component {
   drawHours() {
     let lines = []
     for (let i = 0; i < 24; i++) {
-      lines.push(<div key={i} style={{position:'relative', height:dayHeight, boxShadow:'0 -1px 0 0 gray inset'}}></div>)
+      lines.push(<TimeUnit key={i} height={dayHeight} start={i} click={this.mouseClick} mouseEnter={this.mouseMove} />)
     }
     return lines;
   }
@@ -52,8 +53,8 @@ class Day extends Component {
         top: this.state.start,
         left: 0,
         width: 80,
-        height: Math.abs(this.state.end - this.state.start),
-        backgroundColor: 'purple'
+        height: Math.max(dayHeight, this.state.end - this.state.start),
+        backgroundColor: 'rgba(0, 0, 255, 0.2)'
       };
 
       return <div style={style} />
@@ -62,7 +63,7 @@ class Day extends Component {
 
   render() {
     return(
-      <div onMouseMove={this.mouseMove} onClick={this.mouseClick} >
+      <div onMouseMove={this.mouseMove} >
         {this.drawHours()}
         {this.drawSelection()}
       </div>
