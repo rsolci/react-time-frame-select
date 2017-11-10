@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+const dayHeight = 20;
+
 class Day extends Component {
   state = {
     selecting: false,
@@ -16,17 +18,21 @@ class Day extends Component {
       });
       // TODO event create mode
     } else {
+      const snapped = Math.floor(event.clientY / dayHeight) * dayHeight;
+      console.info(snapped);
       this.setState({
         selecting: !this.state.selecting,
-        start: event.clientY
+        start: snapped,
+        end: snapped
       })
     }
   }
 
   mouseMove = (event) => {
     if (this.state.selecting) {
+      const snapped = Math.ceil(event.clientY / dayHeight) * dayHeight;
       this.setState({
-        end: event.clientY
+        end: snapped
       })
     }
   }
@@ -34,7 +40,7 @@ class Day extends Component {
   drawHours() {
     let lines = []
     for (let i = 0; i < 24; i++) {
-      lines.push(<div key={i} style={{position:'relative', height:'20px', borderBottom:'1px solid gray'}}></div>)
+      lines.push(<div key={i} style={{position:'relative', height:dayHeight, boxShadow:'0 -1px 0 0 gray inset'}}></div>)
     }
     return lines;
   }
