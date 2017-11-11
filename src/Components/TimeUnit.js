@@ -12,7 +12,7 @@ class TimeUnit extends Component {
   }
 
   render() {
-    const style = { position: 'relative', height: this.props.height, boxShadow: '0 -1px 0 0 rgba(128, 128, 128, 0.4) inset' };
+    const style = { position: 'relative', height: this.props.height, boxShadow: '0 -1px 0 0 rgba(128, 128, 128, 0.2) inset' };
 
     return(
       <div style={style} onClick={this.onClick} onMouseEnter={this.onMouseEnter} ></div>

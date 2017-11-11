@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import TimeUnit from './TimeUnit'
 
-const dayHeight = 20;
+const dayHeight = 30;
 
 class Day extends Component {
   state = {
@@ -11,26 +11,26 @@ class Day extends Component {
     end: 0
   }
 
-  mouseClick = (start) => {
-    const position = start * dayHeight;
+  mouseClick = (event) => {
     if (this.state.selecting) {
       this.setState({
         selecting: !this.state.selecting,
         start: 0,
-        end: position
+        end: event.clientY
       });
       // TODO event create mode
     } else {
+      const snapped = Math.floor(event.clientY / dayHeight) * dayHeight;
       this.setState({
         selecting: !this.state.selecting,
-        start: position,
-        end: position
+        start: snapped,
+        end: snapped
       })
     }
   }
 
-  mouseMove = (start) => {
-    const position = start * dayHeight;
+  mouseMove = (event) => {
+    const position = Math.ceil(event.clientY / dayHeight) * dayHeight;
     if (this.state.selecting) {
       this.setState({
         end: position
@@ -41,7 +41,7 @@ class Day extends Component {
   drawHours() {
     let lines = []
     for (let i = 0; i < 24; i++) {
-      lines.push(<TimeUnit key={i} height={dayHeight} start={i} click={this.mouseClick} mouseEnter={this.mouseMove} />)
+      lines.push(<TimeUnit key={i} height={dayHeight} start={i} />)
     }
     return lines;
   }
@@ -63,7 +63,7 @@ class Day extends Component {
 
   render() {
     return(
-      <div onMouseMove={this.mouseMove} >
+      <div onMouseMove={this.mouseMove} onClick={this.mouseClick} >
         {this.drawHours()}
         {this.drawSelection()}
       </div>
